@@ -1,0 +1,93 @@
+public final class app/lexilabs/basic/sound/Audio : app/lexilabs/basic/sound/AudioBuilder {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Z)V
+	public synthetic fun <init> (Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getAudioState ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun getAutoPlay ()Z
+	public final fun getResource ()Ljava/lang/String;
+	public fun load (Ljava/lang/Object;)V
+	public static synthetic fun load$default (Lapp/lexilabs/basic/sound/Audio;Ljava/lang/Object;ILjava/lang/Object;)V
+	public fun pause ()V
+	public fun play ()V
+	public fun release ()V
+	public final fun setAutoPlay (Z)V
+	public final fun setResource (Ljava/lang/String;)V
+	public fun stop ()V
+}
+
+public abstract interface class app/lexilabs/basic/sound/AudioBuilder {
+	public abstract fun getAudioState ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun load (Ljava/lang/Object;)V
+	public abstract fun pause ()V
+	public abstract fun play ()V
+	public abstract fun release ()V
+	public abstract fun stop ()V
+}
+
+public final class app/lexilabs/basic/sound/AudioByte : app/lexilabs/basic/sound/AudioByteBuilder {
+	public fun <init> ()V
+	public fun load (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+	public fun play (Ljava/lang/Object;)V
+	public fun release ()V
+}
+
+public abstract interface class app/lexilabs/basic/sound/AudioByteBuilder {
+	public abstract fun load (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+	public abstract fun play (Ljava/lang/Object;)V
+	public abstract fun release ()V
+}
+
+public abstract class app/lexilabs/basic/sound/AudioState {
+}
+
+public final class app/lexilabs/basic/sound/AudioState$ERROR : app/lexilabs/basic/sound/AudioState {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lapp/lexilabs/basic/sound/AudioState$ERROR;
+	public static synthetic fun copy$default (Lapp/lexilabs/basic/sound/AudioState$ERROR;Ljava/lang/String;ILjava/lang/Object;)Lapp/lexilabs/basic/sound/AudioState$ERROR;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/lexilabs/basic/sound/AudioState$LOADING : app/lexilabs/basic/sound/AudioState {
+	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$LOADING;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/lexilabs/basic/sound/AudioState$NONE : app/lexilabs/basic/sound/AudioState {
+	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$NONE;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/lexilabs/basic/sound/AudioState$PAUSED : app/lexilabs/basic/sound/AudioState {
+	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$PAUSED;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/lexilabs/basic/sound/AudioState$PLAYING : app/lexilabs/basic/sound/AudioState {
+	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$PLAYING;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class app/lexilabs/basic/sound/AudioState$READY : app/lexilabs/basic/sound/AudioState {
+	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$READY;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface annotation class app/lexilabs/basic/sound/ExperimentalBasicSound : java/lang/annotation/Annotation {
+}
+
