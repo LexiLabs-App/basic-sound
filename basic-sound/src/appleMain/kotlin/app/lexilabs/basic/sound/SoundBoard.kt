@@ -18,8 +18,6 @@ import kotlin.collections.set
 @OptIn(ExperimentalForeignApi::class)
 public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
 
-    // TODO: Sounds only play one after another, but stay in the buffer while waiting
-
     private val tag = "SoundBoard"
     private val engine: AVAudioEngine = AVAudioEngine()
     private val mixerNode: AVAudioMixerNode = engine.mainMixerNode
