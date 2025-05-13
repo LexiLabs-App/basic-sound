@@ -18,6 +18,8 @@ import kotlin.collections.set
 @OptIn(ExperimentalForeignApi::class)
 public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
 
+    // TODO: Sounds only play one after another, but stay in the buffer while waiting
+
     private val tag = "SoundBoard"
     private val engine: AVAudioEngine = AVAudioEngine()
     private val mixerNode: AVAudioMixerNode = engine.mainMixerNode
@@ -43,9 +45,6 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
     @OptIn(UnsafeNumber::class)
     private fun startMixer(){
         Log.i(tag, "startMixer:starting")
-        val playerNode = AVAudioPlayerNode()
-        engine.attachNode(playerNode)
-        engine.connect(playerNode, mixerNode, mixerNode.outputFormatForBus(AVAudioNodeBus.MIN_VALUE))
         CoroutineScope(Dispatchers.Default).launch {
             while (true) {
                 val result = mixer.receiveCatching()
@@ -53,6 +52,9 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
                     null -> break
                     else -> {
                         audioFiles[name]?.let {
+                            val playerNode = AVAudioPlayerNode()
+                            engine.attachNode(playerNode)
+                            engine.connect(playerNode, mixerNode, mixerNode.outputFormatForBus(AVAudioNodeBus.MIN_VALUE))
                             playerNode.scheduleFile(file = it, atTime = null, null)
                             playerNode.play()
                         }

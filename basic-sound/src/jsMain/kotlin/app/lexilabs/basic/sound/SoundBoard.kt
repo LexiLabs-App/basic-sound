@@ -9,6 +9,8 @@ import org.w3c.dom.Audio
 
 public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
 
+    // TODO: Sounds only play one after another, and release from the buffer if sound is already active
+
     private val tag: String = "SoundBoard"
     private val audioObjects: MutableMap<String, Audio> = mutableMapOf<String, Audio>()
 
@@ -33,7 +35,12 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
                 when (val name = result.getOrNull()) {
                     null -> break
                     else -> {
-                        audioObjects[name]?.play()
+                        val newPlayer = audioObjects[name]
+                        newPlayer?.play()
+                        when(newPlayer?.paused) {
+                            true -> newPlayer.srcObject = null
+                            else -> { /* DO NOTHING */ }
+                        }
                     }
                 }
             }
