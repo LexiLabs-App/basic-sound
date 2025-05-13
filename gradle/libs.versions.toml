@@ -1,7 +1,12 @@
 [versions]
+# BUILD INFO
+sound = "0.2.6-beta01"
+build-sdk-min = "24"
+build-sdk-compile = "35"
 kotlin = "2.1.20"
-agp = "8.9.1"
-kotlinx-coroutines = "1.10.1"
+agp = "8.9.2"
+# DEPENDENCIES
+kotlinx-coroutines = "1.10.2"
 kotlinx-browser = "0.3"
 bcv = "0.17.0"
 dokka = "2.0.0"
@@ -9,6 +14,7 @@ kover = "0.9.1"
 lexilabs-basic = "0.2.5"
 
 [libraries]
+dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
