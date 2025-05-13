@@ -168,7 +168,7 @@ soundBoard.mixer.play(click) // Use the original SoundByte value
 soundBoard.powerDown()
 ```
 
-## [Deprecated] `AudioByte` Usage
+## [Deprecated] ~~`AudioByte`~~ Usage
 AudioByte allows you to load audio to memory to play multiple times later without reloading -- sort of like a soundboard.
 You could make a callable class that is passed throughout the app so the sounds could be access in any context.
 If you need help creating a platformContext, [you're welcome to steal my method.]("https://medium.com/@robert.jamison/passing-android-context-in-kmp-jetpack-compose-8de5b5de7bdd")
