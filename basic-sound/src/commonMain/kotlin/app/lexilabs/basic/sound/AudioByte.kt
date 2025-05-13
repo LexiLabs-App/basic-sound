@@ -10,6 +10,11 @@ package app.lexilabs.basic.sound
  * audioByte.play(clickSound) // Call it whenever you like as needed
  * ```
  */
+@Deprecated(
+    "AudioByte greedily eats up memory. Switch to the newer channel-based implementation, SoundBoard(context = Any?).",
+    replaceWith = ReplaceWith("SoundBoard(context = null)"),
+    level = DeprecationLevel.WARNING
+)
 public expect class AudioByte(): AudioByteBuilder {
     /**
      * Used to load an [Audio] file into memory.
