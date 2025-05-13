@@ -5,6 +5,11 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import android.util.Log
 
+@Deprecated(
+    "AudioByte greedily eats up memory. Switch to the newer channel-based implementation, SoundBoard(context = Any?).",
+    replaceWith = ReplaceWith("SoundBoard(context = null)"),
+    level = DeprecationLevel.WARNING
+)
 public actual class AudioByte actual constructor() : AudioByteBuilder {
     private val soundPool: SoundPool
     private var audioIdHolder: Int = 0

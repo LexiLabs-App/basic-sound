@@ -3,6 +3,11 @@ package app.lexilabs.basic.sound
 import app.lexilabs.basic.logging.Log
 import org.w3c.dom.Audio
 
+@Deprecated(
+    "AudioByte greedily eats up memory. Switch to the newer channel-based implementation, SoundBoard(context = Any?).",
+    replaceWith = ReplaceWith("SoundBoard(context = null)"),
+    level = DeprecationLevel.WARNING
+)
 public actual class AudioByte actual constructor() : AudioByteBuilder {
     private var audioPlayer: Audio = Audio()
 

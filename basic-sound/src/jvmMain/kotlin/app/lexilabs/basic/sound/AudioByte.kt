@@ -5,6 +5,11 @@ import java.io.File
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 
+@Deprecated(
+    "AudioByte greedily eats up memory. Switch to the newer channel-based implementation, SoundBoard(context = Any?).",
+    replaceWith = ReplaceWith("SoundBoard(context = null)"),
+    level = DeprecationLevel.WARNING
+)
 public actual class AudioByte actual constructor() : AudioByteBuilder {
 
     private val tag = "BasicSound AudioByte"
