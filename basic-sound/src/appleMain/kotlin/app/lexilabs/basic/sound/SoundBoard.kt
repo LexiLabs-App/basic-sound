@@ -15,7 +15,7 @@ import platform.AVFAudio.AVAudioPlayerNode
 import platform.Foundation.NSURL
 import kotlin.collections.set
 
-@ExperimentalForeignApi
+@OptIn(ExperimentalForeignApi::class)
 public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
 
     private val tag = "SoundBoard"
