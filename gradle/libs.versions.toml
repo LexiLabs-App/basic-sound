@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 agp = "8.9.1"
 kotlinx-coroutines = "1.10.1"
 kotlinx-browser = "0.3"
