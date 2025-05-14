@@ -6,7 +6,7 @@ kotlinx-browser = "0.3"
 bcv = "0.17.0"
 dokka = "2.0.0"
 kover = "0.9.1"
-lexilabs-basic = "0.2.5"
+lexilabs-basic = "0.2.6"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
