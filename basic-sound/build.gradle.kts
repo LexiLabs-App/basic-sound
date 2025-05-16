@@ -69,8 +69,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
-            compileOnly(libs.lexilabs.basic.logging)
-            api(libs.lexilabs.basic.logging)
+            implementation(libs.lexilabs.basic.logging)
         }
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
@@ -111,10 +110,10 @@ kotlin {
 
 android {
     namespace = "app.lexilabs.basic.sound"
-    compileSdk = 35
+    compileSdk = rootProject.libs.versions.build.sdk.compile.get().toInt()
 
     defaultConfig {
-        minSdk = 24
+        minSdk = rootProject.libs.versions.build.sdk.min.get().toInt()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

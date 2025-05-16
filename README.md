@@ -1,5 +1,5 @@
 # Basic-Sound
-<img src="images/basic.png" alt="basic" height="240" align="right"/> 
+<img src="images/logo-icon.svg" alt="basic" height="240" align="right"/> 
 
 [![Basic-Sound](https://img.shields.io/maven-central/v/app.lexilabs.basic/basic-sound?color=blue)](https://central.sonatype.com/artifact/app.lexilabs.basic/basic-sound)
 
@@ -36,7 +36,7 @@ You'll need to add your maven dependency list
 ```toml
 # in your 'libs.versions.toml' file
 [versions]
-kotlin = "2.1.0" # Updated Kotlin version required due to Composable Resources
+kotlin = "+" # gets the latest version
 lexilabs-basic = "+" # gets the latest version
 
 [libraries]
@@ -133,13 +133,48 @@ val audio = Audio(context, resource) // loads the audio file
 audio.play() // plays the audio immediately upon execution
 ```
 
-## `AudioByte` Usage
+## `SoundBoard` Usage
+SoundBoard allows you to load audio to memory to play multiple times later without reloading -- sort of like an actual soundboard.
+The primary steps include:
+1. Create a SoundBoard instance
+2. Load SoundBytes onto the SoundBoard
+3. PowerUp the SoundBoard
+4. Play Sounds via the mixer
+   If you need help creating a `Context` for the Android implementation, [you're welcome to steal my method.]("https://medium.com/@robert.jamison/passing-android-context-in-kmp-jetpack-compose-8de5b5de7bdd")
+```kotlin
+// commonMain
+
+/* Create a SoundBoard Instance */
+val soundBoard = SoundBoard(context)
+
+/* Create a SoundByte */
+val click = SoundByte(
+    name = "click",
+    localPath = Res.getUri("files/click.mp3")
+)
+
+/* Load the SoundByte onto the SoundBoard */
+soundBoard.load(click)
+
+/* PowerUp the SoundBoard */
+soundBoard.powerUp()
+
+/* Play sounds via the mixer */
+soundBoard.mixer.play("click") // Use a String
+soundBoard.mixer.play(click) // Use the original SoundByte value
+/* Repeat as much as you like */
+
+/* When you're done, PowerDown the SoundBoard to release resources */
+soundBoard.powerDown()
+```
+
+## [Deprecated] ~~`AudioByte`~~ Usage
 AudioByte allows you to load audio to memory to play multiple times later without reloading -- sort of like a soundboard.
 You could make a callable class that is passed throughout the app so the sounds could be access in any context.
 If you need help creating a platformContext, [you're welcome to steal my method.]("https://medium.com/@robert.jamison/passing-android-context-in-kmp-jetpack-compose-8de5b5de7bdd")
 ```kotlin
 // Your custom class built in commonMain
-class SoundBoard(platformContext: Any) {
+class AudioByte(platformContext: Any) {
     // 
     private val audioByte: AudioByte = AudioByte()
     private val click: Any = audioByte.load(platformContext, Res.getUri("files/click.mp3"))
@@ -151,10 +186,10 @@ class SoundBoard(platformContext: Any) {
 }
 
 // create your class later
-val soundBoard = SoundBoard(myPlatformContext)
+val audioByte = AudioByte(myPlatformContext)
 // generate the sound whenever you like after
-soundBoard.click()
-// remember to release when you won't need the soundboard anymore.  
+audioByte.click()
+// remember to release when you won't need the audio board anymore.  
 // If you use the sound everywhere, you won't need to do this
-soundBoard.release()
+audioByte.release()
 ```

@@ -10,6 +10,11 @@ import platform.AVFAudio.AVAudioNodeBus
 import platform.AVFAudio.AVAudioPlayerNode
 import platform.Foundation.NSURL
 
+@Deprecated(
+    "AudioByte greedily eats up memory. Switch to the newer channel-based implementation, SoundBoard(context = Any?).",
+    replaceWith = ReplaceWith("SoundBoard(context = null)"),
+    level = DeprecationLevel.WARNING
+)
 @OptIn(ExperimentalForeignApi::class)
 public actual class AudioByte actual constructor() : AudioByteBuilder {
     private val engine: AVAudioEngine = AVAudioEngine()
