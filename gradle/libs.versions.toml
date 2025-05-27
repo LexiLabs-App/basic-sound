@@ -1,17 +1,17 @@
 [versions]
 # BUILD INFO
-sound = "0.2.6-beta01"
+sound = "0.2.6-beta02"
 build-sdk-min = "24"
 build-sdk-compile = "35"
 kotlin = "2.1.21"
-agp = "8.9.2"
+agp = "8.10.0"
 # DEPENDENCIES
 kotlinx-coroutines = "1.10.2"
 kotlinx-browser = "0.3"
 bcv = "0.17.0"
 dokka = "2.0.0"
 kover = "0.9.1"
-lexilabs-basic = "0.2.5"
+lexilabs-basic-logging = "0.2.6"
 
 [libraries]
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
@@ -19,7 +19,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser"}
-lexilabs-basic-logging = { module = "app.lexilabs.basic:basic-logging", version.ref = "lexilabs-basic"}
+lexilabs-basic-logging = { module = "app.lexilabs.basic:basic-logging", version.ref = "lexilabs-basic-logging"}
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
