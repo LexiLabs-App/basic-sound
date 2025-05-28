@@ -31,8 +31,10 @@ allprojects {
     extensions.configure<PublishingExtension> {
         repositories {
             maven {
+                val sonatypeReleasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                val sonatypeSnapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 name = "maven"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2")
+                url = if (version.toString().endsWith("SNAPSHOT")) sonatypeSnapshotsRepoUrl else sonatypeReleasesRepoUrl
                 credentials {
                     username = gradleLocalProperties(rootDir, providers).getProperty("sonatypeUsername")
                     password = gradleLocalProperties(rootDir, providers).getProperty("sonatypePassword")
