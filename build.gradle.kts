@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.base.DokkaBase
@@ -31,36 +29,36 @@ allprojects {
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "com.vanniktech.maven.publish")
     apply(plugin = "maven-publish")
-//    apply(plugin = "org.jetbrains.kotlin.multiplatform")
+
+    tasks.withType<DokkaTask>().configureEach{
+        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+            dependsOn("clearDokkaHtml")
+            outputDirectory = file("${projectDir.parent}/docs")
+            moduleName = project.name
+            moduleVersion = project.version.toString()
+            customAssets = listOf(file("${projectDir.parent}/images/logo-icon.svg"))
+            // Need to create a cool looking theme at some point
+            //customStyleSheets = listOf(file("${projectDir.parent}/dokka/styles.css"))
+            footerMessage = "(c) 2025 LexiLabs"
+            failOnWarning = false
+            suppressObviousFunctions = true
+            suppressInheritedMembers = false
+            offlineMode = false
+        }
+    }
+
+    /** dokka generation **/
+    tasks.register<Delete>("clearDokkaHtml") {
+        delete("${projectDir.parent}/docs")
+    }
 
     extensions.configure<MavenPublishBaseExtension> {
 
-        val javadocJar = tasks.register<Jar>("javadocJar") {
-            dependsOn(tasks.dokkaHtml)
-            archiveClassifier.set("javadoc")
-            from("${layout.buildDirectory}/dokka")
-        }
-
-        /** dokka generation **/
-        tasks.register<Delete>("clearDokkaHtml") {
-            delete("${projectDir.parent}/docs")
-        }
-        tasks.withType<DokkaTask>().configureEach{
-            pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-                dependsOn("clearDokkaHtml")
-                outputDirectory = file("${projectDir.parent}/docs")
-                moduleName = project.name
-                moduleVersion = project.version.toString()
-                customAssets = listOf(file("${projectDir.parent}/images/logo-icon.svg"))
-                // Need to create a cool looking theme at some point
-                //customStyleSheets = listOf(file("${projectDir.parent}/dokka/styles.css"))
-                footerMessage = "(c) 2025 LexiLabs"
-                failOnWarning = false
-                suppressObviousFunctions = true
-                suppressInheritedMembers = false
-                offlineMode = false
-            }
-        }
+//        val javadocJar = tasks.register<Jar>("javadocJar") {
+//            dependsOn(tasks.dokkaHtml)
+//            archiveClassifier.set("javadoc")
+//            from("${layout.buildDirectory}/dokka")
+//        }
 
         mavenPublishing {
             val isSnapshot = version.toString().endsWith("-SNAPSHOT")
