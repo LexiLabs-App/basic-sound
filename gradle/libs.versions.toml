@@ -1,6 +1,6 @@
 [versions]
 # BUILD INFO
-sound = "0.2.6-beta02" #"0.2.6-SNAPSHOT"
+sound = "0.2.6-SNAPSHOT"
 build-sdk-min = "24"
 build-sdk-compile = "35"
 kotlin = "2.1.21"
@@ -13,6 +13,7 @@ dokka = "2.0.0"
 kover = "0.9.1"
 lexilabs-basic-logging = "0.2.6"
 mp3-spi = "1.9.5.4"
+maven-publish = "0.32.0"
 
 [libraries]
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
@@ -29,3 +30,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlinx-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv"}
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish"}
+

@@ -1,4 +1,5 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -6,6 +7,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     alias(libs.plugins.multiplatform).apply(false)
     alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.maven.publish)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
 }
@@ -25,22 +27,10 @@ allprojects {
     version = rootProject.libs.versions.sound.get()
 
     apply(plugin = "org.jetbrains.dokka")
+    apply(plugin = "com.vanniktech.maven.publish")
     apply(plugin = "maven-publish")
-    apply(plugin = "signing")
 
-    extensions.configure<PublishingExtension> {
-        repositories {
-            maven {
-                val sonatypeReleasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                val sonatypeSnapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                name = "maven"
-                url = if (version.toString().endsWith("SNAPSHOT")) sonatypeSnapshotsRepoUrl else sonatypeReleasesRepoUrl
-                credentials {
-                    username = gradleLocalProperties(rootDir, providers).getProperty("sonatypeUsername")
-                    password = gradleLocalProperties(rootDir, providers).getProperty("sonatypePassword")
-                }
-            }
-        }
+    extensions.configure<MavenPublishBaseExtension> {
 
         val javadocJar = tasks.register<Jar>("javadocJar") {
             dependsOn(tasks.dokkaHtml)
@@ -69,61 +59,46 @@ allprojects {
             }
         }
 
-        publications {
-            withType<MavenPublication> {
-                artifact(javadocJar)
+        mavenPublishing {
+            val isSnapshot = version.toString().endsWith("-SNAPSHOT")
+            artifacts.dokkaPlugin(javadocJar)
+            publishToMavenCentral(
+                if (isSnapshot) {
+                    SonatypeHost("https://central.sonatype.com/repository/maven-snapshots/")
+                }else {
+                    SonatypeHost.CENTRAL_PORTAL
+                }
+            )
+            signAllPublications()
+            coordinates(group.toString(), project.name, version.toString())
 
-                pom {
-                    name.set("Basic")
-                    description.set("Easily integrate audio playback into your Kotlin Multiplatform Mobile (KMP / KMM) project")
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://raw.githubusercontent.com/LexiLabs-App/basic-sound/refs/heads/main/LICENSE")
-                        }
+            pom {
+                name.set("Basic")
+                description.set("Easily integrate audio playback into your Kotlin Multiplatform Mobile (KMP / KMM) project")
+                url.set("https://github.com/LexiLabs-App/basic-sound")
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://raw.githubusercontent.com/LexiLabs-App/basic-sound/refs/heads/main/LICENSE")
                     }
+                }
+                issueManagement {
+                    system.set("Github")
+                    url.set("https://github.com/LexiLabs-App/basic-sound/issues")
+                }
+                scm {
+                    connection.set("https://github.com/LexiLabs-App/basic-sound.git")
                     url.set("https://github.com/LexiLabs-App/basic-sound")
-                    issueManagement {
-                        system.set("Github")
-                        url.set("https://github.com/LexiLabs-App/basic-sound/issues")
-                    }
-                    scm {
-                        connection.set("https://github.com/LexiLabs-App/basic-sound.git")
-                        url.set("https://github.com/LexiLabs-App/basic-sound")
-                    }
-                    developers {
-                        developer {
-                            id.set("rjamison")
-                            name.set("Robert Jamison")
-                            email.set("rjamison@lexilabs.app")
-                            url.set("https://sound.basic.lexilabs.app")
-                        }
+                }
+                developers {
+                    developer {
+                        id.set("rjamison")
+                        name.set("Robert Jamison")
+                        email.set("rjamison@lexilabs.app")
+                        url.set("https://sound.basic.lexilabs.app")
                     }
                 }
             }
         }
-    }
-
-    val publishing = extensions.getByType<PublishingExtension>()
-
-    if (gradle.startParameter.taskNames.any { it == "publish" }) {
-        extensions.configure<SigningExtension> {
-            useInMemoryPgpKeys(
-                gradleLocalProperties(rootDir, providers).getProperty("gpgKeyId"),
-                gradleLocalProperties(rootDir, providers).getProperty("gpgKeySecret"),
-                gradleLocalProperties(rootDir, providers).getProperty("gpgKeyPassword")
-            )
-            sign(publishing.publications)
-        }
-    } else {
-        extensions.configure<SigningExtension> {
-            useGpgCmd()
-            sign(publishing.publications)
-        }
-    }
-
-    // remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
-    project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-        dependsOn(project.tasks.withType(Sign::class.java))
     }
 }
