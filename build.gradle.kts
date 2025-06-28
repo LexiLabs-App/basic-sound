@@ -1,3 +1,5 @@
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.base.DokkaBase
@@ -29,6 +31,7 @@ allprojects {
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "com.vanniktech.maven.publish")
     apply(plugin = "maven-publish")
+//    apply(plugin = "org.jetbrains.kotlin.multiplatform")
 
     extensions.configure<MavenPublishBaseExtension> {
 
@@ -61,7 +64,6 @@ allprojects {
 
         mavenPublishing {
             val isSnapshot = version.toString().endsWith("-SNAPSHOT")
-            artifacts.dokkaPlugin(javadocJar)
             publishToMavenCentral(
                 if (isSnapshot) {
                     SonatypeHost("https://central.sonatype.com/repository/maven-snapshots/")
@@ -71,7 +73,6 @@ allprojects {
             )
             signAllPublications()
             coordinates(group.toString(), project.name, version.toString())
-
             pom {
                 name.set("Basic")
                 description.set("Easily integrate audio playback into your Kotlin Multiplatform Mobile (KMP / KMM) project")
