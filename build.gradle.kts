@@ -56,13 +56,7 @@ allprojects {
     extensions.configure<MavenPublishBaseExtension> {
 
         mavenPublishing {
-
-            // If Snapshot, use Snapshot repo
-            if (version.toString().endsWith("-SNAPSHOT")) {
-                publishToMavenCentral(SonatypeHost("https://central.sonatype.com/repository/maven-snapshots/"))
-            } else {
-                publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-            }
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
             signAllPublications()
             coordinates(group.toString(), project.name, version.toString())
