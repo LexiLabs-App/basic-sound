@@ -61,14 +61,13 @@ allprojects {
 //        }
 
         mavenPublishing {
-            val isSnapshot = version.toString().endsWith("-SNAPSHOT")
-            publishToMavenCentral(
-                if (isSnapshot) {
-                    SonatypeHost("https://central.sonatype.com/repository/maven-snapshots/")
-                }else {
-                    SonatypeHost.CENTRAL_PORTAL
-                }
-            )
+            // If Snapshot, use Snapshot repo
+            if (version.toString().endsWith("-SNAPSHOT")) {
+                publishToMavenCentral(SonatypeHost("https://central.sonatype.com/repository/maven-snapshots/"))
+            } else {
+                publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+            }
+
             signAllPublications()
             coordinates(group.toString(), project.name, version.toString())
             pom {
