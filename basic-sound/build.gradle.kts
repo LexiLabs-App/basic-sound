@@ -79,7 +79,9 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.kotlinx.browser)
         }
-        jvmMain.dependencies {}
+        jvmMain.dependencies {
+            implementation(libs.googlecode.mp3.spi)
+        }
     }
 
     //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers
