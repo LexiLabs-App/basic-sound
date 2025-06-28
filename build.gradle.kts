@@ -52,15 +52,16 @@ allprojects {
         delete("${projectDir.parent}/docs")
     }
 
+    val javadocJar = tasks.register<Jar>("javadocJar") {
+        dependsOn(tasks.dokkaHtml)
+        archiveClassifier.set("javadoc")
+        from("${layout.buildDirectory}/dokka")
+    }
+
     extensions.configure<MavenPublishBaseExtension> {
 
-//        val javadocJar = tasks.register<Jar>("javadocJar") {
-//            dependsOn(tasks.dokkaHtml)
-//            archiveClassifier.set("javadoc")
-//            from("${layout.buildDirectory}/dokka")
-//        }
-
         mavenPublishing {
+
             // If Snapshot, use Snapshot repo
             if (version.toString().endsWith("-SNAPSHOT")) {
                 publishToMavenCentral(SonatypeHost("https://central.sonatype.com/repository/maven-snapshots/"))
