@@ -7,7 +7,6 @@ import org.jetbrains.dokka.gradle.DokkaTask
 plugins {
     alias(libs.plugins.multiplatform).apply(false)
     alias(libs.plugins.android.library).apply(false)
-    alias(libs.plugins.maven.publish)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
 }
@@ -17,6 +16,9 @@ dependencies {
 }
 
 buildscript {
+    plugins {
+        alias(libs.plugins.maven.publish)
+    }
     dependencies {
         classpath(libs.dokka.base)
     }
@@ -28,7 +30,6 @@ allprojects {
 
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "com.vanniktech.maven.publish")
-    apply(plugin = "maven-publish")
 
     tasks.withType<DokkaTask>().configureEach{
         pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
@@ -52,11 +53,11 @@ allprojects {
         delete("${projectDir.parent}/docs")
     }
 
-    val javadocJar = tasks.register<Jar>("javadocJar") {
-        dependsOn(tasks.dokkaHtml)
-        archiveClassifier.set("javadoc")
-        from("${layout.buildDirectory}/dokka")
-    }
+//    val javadocJar = tasks.register<Jar>("javadocJar") {
+//        dependsOn(tasks.dokkaHtml)
+//        archiveClassifier.set("javadoc")
+//        from("${layout.buildDirectory}/dokka")
+//    }
 
     extensions.configure<MavenPublishBaseExtension> {
 
