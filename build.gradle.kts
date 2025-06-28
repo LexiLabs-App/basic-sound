@@ -11,17 +11,11 @@ plugins {
     alias(libs.plugins.kover)
 }
 
-dependencies {
-    kover(project(":basic-sound"))
-}
+dependencies { kover(project(":basic-sound")) }
 
 buildscript {
-    plugins {
-        alias(libs.plugins.maven.publish)
-    }
-    dependencies {
-        classpath(libs.dokka.base)
-    }
+    plugins { alias(libs.plugins.maven.publish) }
+    dependencies { classpath(libs.dokka.base) }
 }
 
 allprojects {
