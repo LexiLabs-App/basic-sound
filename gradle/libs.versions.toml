@@ -1,6 +1,6 @@
 [versions]
 # BUILD INFO
-sound = "0.2.6-SNAPSHOT"
+sound = "0.2.6-beta02" #"0.2.6-SNAPSHOT"
 build-sdk-min = "24"
 build-sdk-compile = "35"
 kotlin = "2.1.21"
