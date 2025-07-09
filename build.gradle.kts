@@ -1,5 +1,4 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -47,16 +46,10 @@ allprojects {
         delete("${projectDir.parent}/docs")
     }
 
-//    val javadocJar = tasks.register<Jar>("javadocJar") {
-//        dependsOn(tasks.dokkaHtml)
-//        archiveClassifier.set("javadoc")
-//        from("${layout.buildDirectory}/dokka")
-//    }
-
     extensions.configure<MavenPublishBaseExtension> {
 
         mavenPublishing {
-            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+            publishToMavenCentral(automaticRelease = true)
 
             signAllPublications()
             coordinates(group.toString(), project.name, version.toString())
