@@ -50,7 +50,6 @@ allprojects {
 
         mavenPublishing {
             publishToMavenCentral(automaticRelease = true)
-
             signAllPublications()
             coordinates(group.toString(), project.name, version.toString())
             pom {

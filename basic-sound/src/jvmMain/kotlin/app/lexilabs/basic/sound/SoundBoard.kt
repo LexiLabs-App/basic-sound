@@ -12,6 +12,7 @@ import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.DataLine.Info
+import javax.sound.sampled.LineEvent
 import javax.sound.sampled.LineUnavailableException
 
 public actual class SoundBoard actual constructor (context: Any?): SoundBoardBuilder {
@@ -51,7 +52,14 @@ public actual class SoundBoard actual constructor (context: Any?): SoundBoardBui
                         audioInputStreams[name]?.let { (format, byteArray) ->
                             val clip = getClip(format)
                             clip.open(format, byteArray, 0, byteArray.size)
+                            Log.d(tag, "Mixer: clip `$name` starting")
                             clip.start()
+                            clip.addLineListener { event ->
+                                if (event.type == LineEvent.Type.STOP) {
+                                    Log.d(tag, "Mixer: clip `$name` closing")
+                                    clip.close()
+                                }
+                            }
                         }
                     }
                 }
