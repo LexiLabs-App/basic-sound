@@ -51,13 +51,16 @@ public actual class SoundBoard actual constructor (context: Any?): SoundBoardBui
                     else -> {
                         audioInputStreams[name]?.let { (format, byteArray) ->
                             val clip = getClip(format)
-                            clip.open(format, byteArray, 0, byteArray.size)
-                            Log.d(tag, "Mixer: clip `$name` starting")
-                            clip.start()
-                            clip.addLineListener { event ->
-                                if (event.type == LineEvent.Type.STOP) {
-                                    Log.d(tag, "Mixer: clip `$name` closing")
-                                    clip.close()
+                            synchronized(clip) {
+                                clip.open(format, byteArray, 0, byteArray.size)
+                                Log.d(tag, "Mixer: clip `$name` starting")
+                                clip.start()
+                                clip.addLineListener { event ->
+                                    if (event.type == LineEvent.Type.STOP) {
+                                        Log.d(tag, "Mixer: clip `$name` closing")
+                                        clip.close()
+                                        clip.flush()
+                                    }
                                 }
                             }
                         }
