@@ -7,7 +7,7 @@ kotlin = "2.1.21"
 agp = "8.9.2"
 # DEPENDENCIES
 kotlinx-coroutines = "1.10.2"
-kotlinx-browser = "0.3"
+kotlinx-browser = "0.4"
 bcv = "0.17.0"
 dokka = "2.0.0"
 kover = "0.9.1"
