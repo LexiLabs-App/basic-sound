@@ -69,6 +69,9 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.lexilabs.basic.logging)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
         }
