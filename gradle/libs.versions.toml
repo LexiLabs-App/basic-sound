@@ -3,7 +3,7 @@
 sound = "0.2.6-beta02"
 build-sdk-min = "24"
 build-sdk-compile = "36"
-kotlin = "2.1.21"
+kotlin = "2.2.20"
 agp = "8.10.0"
 # DEPENDENCIES
 kotlinx-coroutines = "1.10.2"
