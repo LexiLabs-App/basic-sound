@@ -8,8 +8,6 @@ plugins {
     alias(libs.plugins.kotlinx.binary.compatibility.validator)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
-    `maven-publish`
-    signing
 }
 
 kotlin {
@@ -42,7 +40,11 @@ kotlin {
         }
     }
 
-    jvm()
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
     listOf(
         iosX64(), // mobile
@@ -71,6 +73,9 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.lexilabs.basic.logging)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
         }
@@ -79,7 +84,9 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.kotlinx.browser)
         }
-        jvmMain.dependencies {}
+        jvmMain.dependencies {
+            implementation(libs.googlecode.mp3.spi)
+        }
     }
 
     //https://kotlinlang.org/docs/native-objc-interop.html#export-of-kdoc-comments-to-generated-objective-c-headers

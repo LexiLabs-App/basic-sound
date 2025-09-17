@@ -1,17 +1,19 @@
 [versions]
 # BUILD INFO
-sound = "0.2.6-beta01"
+sound = "0.2.6-beta02"
 build-sdk-min = "24"
-build-sdk-compile = "35"
+build-sdk-compile = "36"
 kotlin = "2.1.21"
-agp = "8.9.2"
+agp = "8.10.0"
 # DEPENDENCIES
 kotlinx-coroutines = "1.10.2"
 kotlinx-browser = "0.3"
-bcv = "0.17.0"
+bcv = "0.18.0"
 dokka = "2.0.0"
 kover = "0.9.1"
-lexilabs-basic = "0.2.5"
+lexilabs-basic-logging = "0.2.6"
+mp3-spi = "1.9.5.4"
+maven-publish = "0.33.0"
 
 [libraries]
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
@@ -19,7 +21,8 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser"}
-lexilabs-basic-logging = { module = "app.lexilabs.basic:basic-logging", version.ref = "lexilabs-basic"}
+lexilabs-basic-logging = { module = "app.lexilabs.basic:basic-logging", version.ref = "lexilabs-basic-logging"}
+googlecode-mp3-spi = { module = "com.googlecode.soundlibs:mp3spi", version.ref = "mp3-spi"}
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -27,3 +30,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlinx-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv"}
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish"}
+

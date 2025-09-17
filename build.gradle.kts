@@ -1,4 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -10,14 +10,11 @@ plugins {
     alias(libs.plugins.kover)
 }
 
-dependencies {
-    kover(project(":basic-sound"))
-}
+dependencies { kover(project(":basic-sound")) }
 
 buildscript {
-    dependencies {
-        classpath(libs.dokka.base)
-    }
+    plugins { alias(libs.plugins.maven.publish) }
+    dependencies { classpath(libs.dokka.base) }
 }
 
 allprojects {
@@ -25,103 +22,63 @@ allprojects {
     version = rootProject.libs.versions.sound.get()
 
     apply(plugin = "org.jetbrains.dokka")
-    apply(plugin = "maven-publish")
-    apply(plugin = "signing")
+    apply(plugin = "com.vanniktech.maven.publish")
 
-    extensions.configure<PublishingExtension> {
-        repositories {
-            maven {
-                name = "maven"
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2")
-                credentials {
-                    username = gradleLocalProperties(rootDir, providers).getProperty("sonatypeUsername")
-                    password = gradleLocalProperties(rootDir, providers).getProperty("sonatypePassword")
-                }
-            }
+    tasks.withType<DokkaTask>().configureEach{
+        pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+            dependsOn("clearDokkaHtml")
+            outputDirectory = file("${projectDir.parent}/docs")
+            moduleName = project.name
+            moduleVersion = project.version.toString()
+            customAssets = listOf(file("${projectDir.parent}/images/logo-icon.svg"))
+            // Need to create a cool looking theme at some point
+            //customStyleSheets = listOf(file("${projectDir.parent}/dokka/styles.css"))
+            footerMessage = "(c) 2025 LexiLabs"
+            failOnWarning = false
+            suppressObviousFunctions = true
+            suppressInheritedMembers = false
+            offlineMode = false
         }
+    }
 
-        val javadocJar = tasks.register<Jar>("javadocJar") {
-            dependsOn(tasks.dokkaHtml)
-            archiveClassifier.set("javadoc")
-            from("${layout.buildDirectory}/dokka")
-        }
+    /** dokka generation **/
+    tasks.register<Delete>("clearDokkaHtml") {
+        delete("${projectDir.parent}/docs")
+    }
 
-        /** dokka generation **/
-        tasks.register<Delete>("clearDokkaHtml") {
-            delete("${projectDir.parent}/docs")
-        }
-        tasks.withType<DokkaTask>().configureEach{
-            pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-                dependsOn("clearDokkaHtml")
-                outputDirectory = file("${projectDir.parent}/docs")
-                moduleName = project.name
-                moduleVersion = project.version.toString()
-                customAssets = listOf(file("${projectDir.parent}/images/logo-icon.svg"))
-                // Need to create a cool looking theme at some point
-                //customStyleSheets = listOf(file("${projectDir.parent}/dokka/styles.css"))
-                footerMessage = "(c) 2025 LexiLabs"
-                failOnWarning = false
-                suppressObviousFunctions = true
-                suppressInheritedMembers = false
-                offlineMode = false
-            }
-        }
+    extensions.configure<MavenPublishBaseExtension> {
 
-        publications {
-            withType<MavenPublication> {
-                artifact(javadocJar)
-
-                pom {
-                    name.set("Basic")
-                    description.set("Easily integrate audio playback into your Kotlin Multiplatform Mobile (KMP / KMM) project")
-                    licenses {
-                        license {
-                            name.set("MIT License")
-                            url.set("https://raw.githubusercontent.com/LexiLabs-App/basic-sound/refs/heads/main/LICENSE")
-                        }
+        mavenPublishing {
+            publishToMavenCentral(automaticRelease = true)
+            signAllPublications()
+            coordinates(group.toString(), project.name, version.toString())
+            pom {
+                name.set("Basic")
+                description.set("Easily integrate audio playback into your Kotlin Multiplatform Mobile (KMP / KMM) project")
+                url.set("https://github.com/LexiLabs-App/basic-sound")
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://raw.githubusercontent.com/LexiLabs-App/basic-sound/refs/heads/main/LICENSE")
                     }
+                }
+                issueManagement {
+                    system.set("Github")
+                    url.set("https://github.com/LexiLabs-App/basic-sound/issues")
+                }
+                scm {
+                    connection.set("https://github.com/LexiLabs-App/basic-sound.git")
                     url.set("https://github.com/LexiLabs-App/basic-sound")
-                    issueManagement {
-                        system.set("Github")
-                        url.set("https://github.com/LexiLabs-App/basic-sound/issues")
-                    }
-                    scm {
-                        connection.set("https://github.com/LexiLabs-App/basic-sound.git")
-                        url.set("https://github.com/LexiLabs-App/basic-sound")
-                    }
-                    developers {
-                        developer {
-                            id.set("rjamison")
-                            name.set("Robert Jamison")
-                            email.set("rjamison@lexilabs.app")
-                            url.set("https://sound.basic.lexilabs.app")
-                        }
+                }
+                developers {
+                    developer {
+                        id.set("rjamison")
+                        name.set("Robert Jamison")
+                        email.set("rjamison@lexilabs.app")
+                        url.set("https://sound.basic.lexilabs.app")
                     }
                 }
             }
         }
-    }
-
-    val publishing = extensions.getByType<PublishingExtension>()
-
-    if (gradle.startParameter.taskNames.any { it == "publish" }) {
-        extensions.configure<SigningExtension> {
-            useInMemoryPgpKeys(
-                gradleLocalProperties(rootDir, providers).getProperty("gpgKeyId"),
-                gradleLocalProperties(rootDir, providers).getProperty("gpgKeySecret"),
-                gradleLocalProperties(rootDir, providers).getProperty("gpgKeyPassword")
-            )
-            sign(publishing.publications)
-        }
-    } else {
-        extensions.configure<SigningExtension> {
-            useGpgCmd()
-            sign(publishing.publications)
-        }
-    }
-
-    // remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
-    project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-        dependsOn(project.tasks.withType(Sign::class.java))
     }
 }
