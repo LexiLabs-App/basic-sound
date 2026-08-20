@@ -1,19 +1,19 @@
 [versions]
 # BUILD INFO
-sound = "0.2.6-beta02"
+sound = "0.2.6"
 build-sdk-min = "24"
-build-sdk-compile = "36"
-kotlin = "2.1.21"
-agp = "8.10.0"
+build-sdk-compile = "37"
+kotlin = "2.4.10"
+agp = "9.3.1"
 # DEPENDENCIES
-kotlinx-coroutines = "1.10.2"
-kotlinx-browser = "0.3"
-bcv = "0.18.0"
-dokka = "2.0.0"
-kover = "0.9.1"
-lexilabs-basic-logging = "0.2.6"
+kotlinx-coroutines = "1.11.0"
+kotlinx-browser = "0.5.0"
+bcv = "0.18.1"
+dokka = "2.2.0"
+kover = "0.9.9"
+lexilabs-basic-logging = "0.3.0"
 mp3-spi = "1.9.5.4"
-maven-publish = "0.33.0"
+maven-publish = "0.37.0"
 
 [libraries]
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
@@ -26,9 +26,8 @@ googlecode-mp3-spi = { module = "com.googlecode.soundlibs:mp3spi", version.ref =
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp"}
 kotlinx-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv"}
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish"}
-
