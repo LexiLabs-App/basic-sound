@@ -14,7 +14,6 @@ kover = "0.9.9"
 lexilabs-basic-logging = "0.3.0"
 mp3-spi = "1.9.5.4"
 maven-publish = "0.37.0"
-compose = "1.11.1"
 
 [libraries]
 dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
@@ -24,15 +23,11 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlinx-browser"}
 lexilabs-basic-logging = { module = "app.lexilabs.basic:basic-logging", version.ref = "lexilabs-basic-logging"}
 googlecode-mp3-spi = { module = "com.googlecode.soundlibs:mp3spi", version.ref = "mp3-spi"}
-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp"}
 kotlinx-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv"}
-composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
-composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish"}
