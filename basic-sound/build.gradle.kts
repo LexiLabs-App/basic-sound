@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.multiplatform.library)
     alias(libs.plugins.kotlinx.binary.compatibility.validator)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
 }
@@ -68,6 +69,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.lexilabs.basic.logging)
+            compileOnly(libs.compose.foundation)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

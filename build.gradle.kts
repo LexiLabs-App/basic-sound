@@ -3,6 +3,7 @@ import com.vanniktech.maven.publish.MavenPublishBaseExtension
 plugins {
     alias(libs.plugins.multiplatform).apply(false)
     alias(libs.plugins.multiplatform.library).apply(false)
+    alias(libs.plugins.composeCompiler).apply(false)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
 }
