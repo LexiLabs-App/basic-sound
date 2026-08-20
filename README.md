@@ -9,12 +9,12 @@ Currently, this library only ingests URLs and local paths. Composable Resources 
 ![badge-android](http://img.shields.io/badge/android-full_support-65c663.svg?style=flat)
 ![badge-ios](http://img.shields.io/badge/ios-full_support-65c663.svg?style=flat)
 ![badge-mac](http://img.shields.io/badge/macos-full_support-65c663.svg?style=flat)
-![badge-watchos](http://img.shields.io/badge/watchos-full_support-65c663.svg?style=flat)
-![badge-tvos](http://img.shields.io/badge/tvos-full_support-65c663.svg?style=flat)
 ![badge-nodejs](https://img.shields.io/badge/jsNode-full_support-65c663.svg?style=flat)
 ![badge-jsBrowser](https://img.shields.io/badge/jsBrowser-full_support-65c663.svg?style=flat)
 ![badge-wasmJsBrowser](https://img.shields.io/badge/wasmJsBrowser-full_support-65c663.svg?style=flat)
 ![badge-jvm](http://img.shields.io/badge/jvm-full_support-65c663.svg?style=flat)
+![badge-watchos](http://img.shields.io/badge/watchos-no_support-red.svg?style=flat)
+![badge-tvos](http://img.shields.io/badge/tvos-no_support-red.svg?style=flat)
 ![badge-linux](http://img.shields.io/badge/linux-no_support-red.svg?style=flat)
 ![badge-windows](http://img.shields.io/badge/windows-no_support-red.svg?style=flat)
 
@@ -138,14 +138,14 @@ SoundBoard allows you to load audio to memory to play multiple times later witho
 The primary steps include:
 1. Create a SoundBoard instance
 2. Load SoundBytes onto the SoundBoard
-3. PowerUp the SoundBoard
+3. PowerUp the SoundBoard (within a `@Composable` scope)
 4. Play Sounds via the mixer
-   If you need help creating a `Context` for the Android implementation, [you're welcome to steal my method.]("https://medium.com/@robert.jamison/passing-android-context-in-kmp-jetpack-compose-8de5b5de7bdd")
+
 ```kotlin
 // commonMain
 
 /* Create a SoundBoard Instance */
-val soundBoard = SoundBoard(context)
+val soundBoard = SoundBoard()
 
 /* Create a SoundByte */
 val click = SoundByte(
@@ -156,40 +156,17 @@ val click = SoundByte(
 /* Load the SoundByte onto the SoundBoard */
 soundBoard.load(click)
 
-/* PowerUp the SoundBoard */
-soundBoard.powerUp()
+@Composable
+fun GameScreen() {
+    /* PowerUp the SoundBoard (requires @Composable context) */
+    soundBoard.PowerUp()
 
-/* Play sounds via the mixer */
-soundBoard.mixer.play("click") // Use a String
-soundBoard.mixer.play(click) // Use the original SoundByte value
-/* Repeat as much as you like */
+    /* Play sounds via the mixer */
+    soundBoard.mixer.play("click") // Use a String
+    soundBoard.mixer.play(click) // Use the original SoundByte value
+    /* Repeat as much as you like */
 
-/* When you're done, PowerDown the SoundBoard to release resources */
-soundBoard.powerDown()
-```
-
-## [Deprecated] ~~`AudioByte`~~ Usage
-AudioByte allows you to load audio to memory to play multiple times later without reloading -- sort of like a soundboard.
-You could make a callable class that is passed throughout the app so the sounds could be access in any context.
-If you need help creating a platformContext, [you're welcome to steal my method.]("https://medium.com/@robert.jamison/passing-android-context-in-kmp-jetpack-compose-8de5b5de7bdd")
-```kotlin
-// Your custom class built in commonMain
-class AudioByte(platformContext: Any) {
-    // 
-    private val audioByte: AudioByte = AudioByte()
-    private val click: Any = audioByte.load(platformContext, Res.getUri("files/click.mp3"))
-    private val fanfare: Any = audioByte.load(platformContext, Res.getUri("files/fanfare.mp3"))
-
-    fun click() = audioByte.play(click)
-    fun fanfare() = audioByte.play(solveId)
-    fun release() = audioByte.release()
+    /* When you're done, PowerDown the SoundBoard to release resources */
+    soundBoard.PowerDown()
 }
-
-// create your class later
-val audioByte = AudioByte(myPlatformContext)
-// generate the sound whenever you like after
-audioByte.click()
-// remember to release when you won't need the audio board anymore.  
-// If you use the sound everywhere, you won't need to do this
-audioByte.release()
 ```

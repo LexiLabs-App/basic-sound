@@ -26,6 +26,8 @@ lexilabs-basic-logging = { module = "app.lexilabs.basic:basic-logging", version.
 googlecode-mp3-spi = { module = "com.googlecode.soundlibs:mp3spi", version.ref = "mp3-spi"}
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
+compose-ui-test = { module = "org.jetbrains.compose.ui:ui-test", version.ref = "compose" }
+compose-ui-test-junit4 = { module = "org.jetbrains.compose.ui:ui-test-junit4", version.ref = "compose" }
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

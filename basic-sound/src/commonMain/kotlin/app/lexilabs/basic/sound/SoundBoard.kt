@@ -10,13 +10,13 @@ import kotlinx.coroutines.channels.Channel
  *
  * ```
  * // Creates SoundBoard instance
- * val soundBoard = SoundBoard(context)
+ * val soundBoard = SoundBoard()
  * // Creates SoundByte
  * val click = SoundByte("click", Res.getUri("files/click.mp3"))
  * // Loads SoundByte
  * soundBoard.load(click)
  * // Prepare to play sounds
- * soundBoard.powerUp()
+ * soundBoard.PowerUp()
  * // Play sounds
  * soundBoard.mixer.play("click")
  * soundBoard.mixer.play(click)

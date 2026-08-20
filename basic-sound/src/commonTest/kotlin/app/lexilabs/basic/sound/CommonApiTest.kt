@@ -1,7 +1,9 @@
-@file:OptIn(ExperimentalBasicSound::class)
+@file:OptIn(ExperimentalBasicSound::class, androidx.compose.ui.test.ExperimentalTestApi::class)
 
 package app.lexilabs.basic.sound
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.v2.runComposeUiTest
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -69,11 +71,15 @@ class CommonApiTest {
     }
 
     @Test
-    fun soundBoardLifecycleCanBeImplementedByPlatform() {
+    fun soundBoardLifecycleCanBeImplementedByPlatform() = runComposeUiTest {
         val board = FakeSoundBoard()
 
-        board.PowerUp()
-        board.PowerDown()
+        setContent {
+            board.PowerUp()
+        }
+        setContent {
+            board.PowerDown()
+        }
 
         assertTrue(board.poweredUp)
         assertTrue(board.poweredDown)
@@ -85,10 +91,12 @@ class CommonApiTest {
         var poweredUp = false
         var poweredDown = false
 
+        @Composable
         override fun PowerUp() {
             poweredUp = true
         }
 
+        @Composable
         override fun PowerDown() {
             poweredDown = true
             mixer.close()

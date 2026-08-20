@@ -71,6 +71,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.compose.ui.test)
         }
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
@@ -82,6 +83,10 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.googlecode.mp3.spi)
+        }
+        jvmTest.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.compose.ui.test.junit4)
         }
     }
 

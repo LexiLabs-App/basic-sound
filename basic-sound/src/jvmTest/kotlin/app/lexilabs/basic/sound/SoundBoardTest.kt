@@ -1,7 +1,8 @@
 package app.lexilabs.basic.sound
 
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.v2.runComposeUiTest
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import java.io.File
 import javax.sound.sampled.AudioSystem
 import kotlin.test.AfterTest
@@ -19,7 +20,7 @@ class SoundBoardTest {
 
     @BeforeTest
     fun setUp() {
-        soundBoard = SoundBoard(null)
+        soundBoard = SoundBoard()
 
         // Create a dummy audio file for testing
         testSoundFile = File.createTempFile("test_sound", ".wav")
@@ -28,38 +29,55 @@ class SoundBoardTest {
         AudioSystem.write(audioInputStream, javax.sound.sampled.AudioFileFormat.Type.WAVE, testSoundFile)
 
         soundBoard.soundBytes.add(SoundByte(testSoundName, testSoundFile.absolutePath))
-        soundBoard.PowerUp()
     }
 
     @AfterTest
     fun tearDown() {
-        soundBoard.PowerDown()
         testSoundFile.delete()
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun `mixer plays sound when name is received`() = runBlocking {
+    fun `mixer plays sound when name is received`() = runComposeUiTest {
+        setContent {
+            soundBoard.PowerUp()
+        }
         // When
         soundBoard.mixer.send(testSoundName)
 
         // Then
-        // We can't easily assert that the sound was played, 
-        // but we can check that no exceptions were thrown during playback.
-        // We'll add a small delay to allow the sound to be processed.
         delay(1000.milliseconds)
+
+        setContent {
+            soundBoard.PowerDown()
+        }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun `unknown sound name is ignored`() = runBlocking {
+    fun `unknown sound name is ignored`() = runComposeUiTest {
+        setContent {
+            soundBoard.PowerUp()
+        }
         soundBoard.mixer.send("missing_sound")
         delay(100.milliseconds)
 
         assertTrue(soundBoard.mixer.trySend(testSoundName).isSuccess)
+
+        setContent {
+            soundBoard.PowerDown()
+        }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun `power down closes mixer`() {
-        soundBoard.PowerDown()
+    fun `power down closes mixer`() = runComposeUiTest {
+        setContent {
+            soundBoard.PowerUp()
+        }
+        setContent {
+            soundBoard.PowerDown()
+        }
 
         assertFalse(soundBoard.mixer.trySend(testSoundName).isSuccess)
     }
