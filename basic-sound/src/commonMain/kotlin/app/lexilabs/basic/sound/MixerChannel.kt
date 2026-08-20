@@ -13,7 +13,7 @@ public typealias MixerChannel = Channel<String>
 
 /**
  * Used to play a [SoundByte] on a [SoundBoard],
- * but requires a [SoundBoard.powerUp] first
+ * but requires a [SoundBoard.PowerUp] first
  * @param soundName a string matching the name of a [SoundByte] you wish to play
  * @see SoundBoard.mixer
  */
@@ -25,7 +25,7 @@ public fun MixerChannel.play(soundName: String){
 
 /**
  * Used to play a [SoundByte] on a [SoundBoard],
- * but requires a [SoundBoard.powerUp] first
+ * but requires a [SoundBoard.PowerUp] first
  * @param sound the [SoundByte] you wish to play (must already be loaded onto your [SoundBoard])
  * @see SoundBoard.mixer
  */

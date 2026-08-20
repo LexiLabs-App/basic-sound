@@ -28,12 +28,12 @@ class SoundBoardTest {
         AudioSystem.write(audioInputStream, javax.sound.sampled.AudioFileFormat.Type.WAVE, testSoundFile)
 
         soundBoard.soundBytes.add(SoundByte(testSoundName, testSoundFile.absolutePath))
-        soundBoard.powerUp()
+        soundBoard.PowerUp()
     }
 
     @AfterTest
     fun tearDown() {
-        soundBoard.powerDown()
+        soundBoard.PowerDown()
         testSoundFile.delete()
     }
 
@@ -59,7 +59,7 @@ class SoundBoardTest {
 
     @Test
     fun `power down closes mixer`() {
-        soundBoard.powerDown()
+        soundBoard.PowerDown()
 
         assertFalse(soundBoard.mixer.trySend(testSoundName).isSuccess)
     }

@@ -1,10 +1,10 @@
 package app.lexilabs.basic.sound
 
+import androidx.compose.runtime.Composable
 import kotlinx.coroutines.channels.Channel
 
 /**
  * Creates a standard [SoundBoard] format to replicate across all platforms
- * @param context (Required for Android) provides [Context] for Composable Resources
  * @property soundBytes a list of [SoundByte] values loaded by the user
  * @property mixer the [Channel] used to pass [MixerChannel.play] commands
  *
@@ -22,12 +22,12 @@ import kotlinx.coroutines.channels.Channel
  * soundBoard.mixer.play(click)
  * ```
  *
- * @see SoundBoardBuilder.powerUp
- * @see SoundBoardBuilder.powerDown
+ * @see SoundBoardBuilder.PowerUp
+ * @see SoundBoardBuilder.PowerDown
  * @see SoundBoardBuilder.load
  *
  */
-public expect class SoundBoard(context: Any?): SoundBoardBuilder {
+public expect class SoundBoard: SoundBoardBuilder {
 
     /** a list of [SoundByte] values loaded by the user */
     override val soundBytes: MutableList<SoundByte>
@@ -38,11 +38,13 @@ public expect class SoundBoard(context: Any?): SoundBoardBuilder {
     /**
      * Used to load the [soundBytes] into memory and begin the listener for the [mixer] channel
      */
-    override fun powerUp()
+    @Composable
+    override fun PowerUp()
 
     /**
      * Used to release resources used by [soundBytes], [mixer],
      * and other platform-specific resources
      */
-    override fun powerDown()
+    @Composable
+    override fun PowerDown()
 }

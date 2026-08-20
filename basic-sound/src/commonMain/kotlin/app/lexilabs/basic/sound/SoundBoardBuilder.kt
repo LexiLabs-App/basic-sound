@@ -1,13 +1,14 @@
 package app.lexilabs.basic.sound
 
+import androidx.compose.runtime.Composable
 import kotlinx.coroutines.channels.Channel
 
 /**
  * Creates a standard [SoundBoard] format to replicate across all platforms
  * @property soundBytes a list of [SoundByte] values loaded by the user
  * @property mixer the [Channel] used to pass [MixerChannel.play] commands
- * @see SoundBoardBuilder.powerUp
- * @see SoundBoardBuilder.powerDown
+ * @see SoundBoardBuilder.PowerUp
+ * @see SoundBoardBuilder.PowerDown
  * @see SoundBoardBuilder.load
  */
 public interface SoundBoardBuilder {
@@ -19,13 +20,15 @@ public interface SoundBoardBuilder {
     /**
      * Used to load the [soundBytes] into memory and begin the listener for the [mixer] channel
      */
-    public fun powerUp()
+    @Composable
+    public fun PowerUp()
 
     /**
      * Used to release resources used by [soundBytes], [mixer],
      * and other platform-specific resources
      */
-    public fun powerDown()
+    @Composable
+    public fun PowerDown()
 
     /**
      * Used to load a [SoundByte] onto a [SoundBoard]
@@ -54,7 +57,7 @@ public interface SoundBoardBuilder {
 
     /**
      * Used to load a [Map] of names and URI [String] values onto a [SoundBoard]
-     * @param soundBytes a [Map] of [SoundByte] names and localPath [String]s
+     * @param soundByte a [Map] of [SoundByte] names and localPath [String]s
      */
     public fun load(soundByte: Map<String, String>) {
         this.soundBytes.addAll(soundByte.map { SoundByte(it.key, it.value) })
@@ -62,7 +65,7 @@ public interface SoundBoardBuilder {
 
     /**
      * Used to load a [Pair] for name and URI [String] values onto a [SoundBoard]
-     * @param soundBytes a [Pair] of a [SoundByte] name and localPath [String]
+     * @param soundByte a [Pair] of a [SoundByte] name and localPath [String]
      */
     public fun load(soundByte: Pair<String, String>) {
         this.soundBytes.add(SoundByte(soundByte.first, soundByte.second))

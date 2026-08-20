@@ -1,18 +1,19 @@
 package app.lexilabs.basic.sound
 
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import app.lexilabs.basic.logging.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlin.collections.forEachIndexed
 
-public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
+public actual class SoundBoard: SoundBoardBuilder {
 
     private val tag: String = "SoundBoard"
-    private val ctx: Context = context as Context
     private val soundPool: SoundPool
     private val audioIds: MutableMap<String, Int> = mutableMapOf<String, Int>()
 
@@ -20,9 +21,6 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
     public actual override val mixer: MixerChannel = Channel<String>()
 
     init {
-        require(context != null) {
-            "context for Soundboard cannot be null in Android"
-        }
 
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
@@ -35,12 +33,13 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
             .build()
     }
 
-    public actual override fun powerUp() {
+    @Composable
+    public actual override fun PowerUp() {
         Log.i(tag, "launch:starting to load sounds")
         soundBytes.forEachIndexed { index, soundByte ->
             Log.i(tag, "launch:adding ${soundByte.name}")
             val path = soundByte.localPath.removePrefix("file:///android_asset/")
-            val fd = ctx.assets.openFd(path)
+            val fd = LocalContext.current.assets.openFd(path)
             audioIds[soundByte.name] = soundPool.load(fd, 1)
         }
         startMixer()
@@ -62,7 +61,8 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         }
     }
 
-    public actual override fun powerDown() {
+    @Composable
+    public actual override fun PowerDown() {
         mixer.close()
         soundPool.release()
         audioIds.clear()

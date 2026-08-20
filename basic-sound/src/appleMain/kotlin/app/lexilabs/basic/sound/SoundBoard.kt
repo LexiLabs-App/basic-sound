@@ -1,5 +1,6 @@
 package app.lexilabs.basic.sound
 
+import androidx.compose.runtime.Composable
 import app.lexilabs.basic.logging.Log
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.UnsafeNumber
@@ -16,7 +17,7 @@ import platform.Foundation.NSURL
 import kotlin.collections.set
 
 @OptIn(ExperimentalForeignApi::class)
-public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
+public actual class SoundBoard: SoundBoardBuilder {
 
     private val tag = "SoundBoard"
     private val engine: AVAudioEngine = AVAudioEngine()
@@ -30,7 +31,8 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         engine.startAndReturnError(null)
     }
 
-    public actual override fun powerUp(){
+    @Composable
+    public actual override fun PowerUp(){
         Log.i(tag, "launch:starting to load sounds")
         soundBytes.forEachIndexed { index, soundByte ->
             Log.i(tag, "launch:adding ${soundByte.name}")
@@ -62,7 +64,8 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         }
     }
 
-    public actual override fun powerDown() {
+    @Composable
+    public actual override fun PowerDown() {
         mixer.close()
         audioFiles.clear()
         soundBytes.clear()

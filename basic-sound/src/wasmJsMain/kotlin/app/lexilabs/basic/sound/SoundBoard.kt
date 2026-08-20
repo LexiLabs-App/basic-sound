@@ -1,5 +1,6 @@
 package app.lexilabs.basic.sound
 
+import androidx.compose.runtime.Composable
 import app.lexilabs.basic.logging.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -7,7 +8,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import org.w3c.dom.Audio
 
-public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
+public actual class SoundBoard: SoundBoardBuilder {
 
     private val tag: String = "SoundBoard"
     private val audioPaths: MutableMap<String, String> = mutableMapOf<String, String>()
@@ -15,7 +16,8 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
     public actual override val soundBytes: MutableList<SoundByte> = mutableListOf<SoundByte>()
     public actual override val mixer: MixerChannel = Channel<String>()
 
-    public actual override fun powerUp() {
+    @Composable
+    public actual override fun PowerUp() {
         Log.i(tag, "launch:starting to load sounds")
         soundBytes.forEachIndexed { index, soundByte ->
             Log.i(tag, "launch:adding ${soundByte.name}")
@@ -25,6 +27,7 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         Log.i(tag, "launch:complete")
     }
 
+    @OptIn(ExperimentalWasmJsInterop::class)
     private fun startMixer() {
         Log.i(tag, "startMixer:starting")
         CoroutineScope(Dispatchers.Default).launch {
@@ -55,7 +58,8 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         audio.srcObject = null
     }
 
-    public actual override fun powerDown() {
+    @Composable
+    public actual override fun PowerDown() {
         mixer.close()
         audioPaths.clear()
         soundBytes.clear()

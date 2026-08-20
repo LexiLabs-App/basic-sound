@@ -1,5 +1,6 @@
 package app.lexilabs.basic.sound
 
+import androidx.compose.runtime.Composable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -11,7 +12,7 @@ import java.util.jar.JarFile
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioSystem
 
-public actual class SoundBoard actual constructor(context: Any?) : SoundBoardBuilder {
+public actual class SoundBoard : SoundBoardBuilder {
 
     public actual override val soundBytes: MutableList<SoundByte> = mutableListOf()
 
@@ -20,7 +21,8 @@ public actual class SoundBoard actual constructor(context: Any?) : SoundBoardBui
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    public actual override fun powerUp() {
+    @Composable
+    public actual override fun PowerUp() {
         scope.launch {
             for (soundName in mixer) {
                 soundBytes.find { it.name == soundName }?.let { soundByte ->
@@ -40,7 +42,8 @@ public actual class SoundBoard actual constructor(context: Any?) : SoundBoardBui
         }
     }
 
-    public actual override fun powerDown() {
+    @Composable
+    public actual override fun PowerDown() {
         job.cancel()
         mixer.close()
     }

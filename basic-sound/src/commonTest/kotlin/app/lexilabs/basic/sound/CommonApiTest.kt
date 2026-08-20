@@ -72,8 +72,8 @@ class CommonApiTest {
     fun soundBoardLifecycleCanBeImplementedByPlatform() {
         val board = FakeSoundBoard()
 
-        board.powerUp()
-        board.powerDown()
+        board.PowerUp()
+        board.PowerDown()
 
         assertTrue(board.poweredUp)
         assertTrue(board.poweredDown)
@@ -85,11 +85,11 @@ class CommonApiTest {
         var poweredUp = false
         var poweredDown = false
 
-        override fun powerUp() {
+        override fun PowerUp() {
             poweredUp = true
         }
 
-        override fun powerDown() {
+        override fun PowerDown() {
             poweredDown = true
             mixer.close()
         }

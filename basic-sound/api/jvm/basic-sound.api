@@ -1,4 +1,5 @@
 public final class app/lexilabs/basic/sound/Audio : app/lexilabs/basic/sound/AudioBuilder {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/Object;Ljava/lang/String;Z)V
 	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -27,6 +28,7 @@ public abstract interface class app/lexilabs/basic/sound/AudioBuilder {
 }
 
 public final class app/lexilabs/basic/sound/AudioByte : app/lexilabs/basic/sound/AudioByteBuilder {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun load (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
 	public fun play (Ljava/lang/Object;)V
@@ -40,9 +42,11 @@ public abstract interface class app/lexilabs/basic/sound/AudioByteBuilder {
 }
 
 public abstract class app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 }
 
 public final class app/lexilabs/basic/sound/AudioState$ERROR : app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 	public fun <init> (Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lapp/lexilabs/basic/sound/AudioState$ERROR;
@@ -54,6 +58,7 @@ public final class app/lexilabs/basic/sound/AudioState$ERROR : app/lexilabs/basi
 }
 
 public final class app/lexilabs/basic/sound/AudioState$LOADING : app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$LOADING;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -61,6 +66,7 @@ public final class app/lexilabs/basic/sound/AudioState$LOADING : app/lexilabs/ba
 }
 
 public final class app/lexilabs/basic/sound/AudioState$NONE : app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$NONE;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -68,6 +74,7 @@ public final class app/lexilabs/basic/sound/AudioState$NONE : app/lexilabs/basic
 }
 
 public final class app/lexilabs/basic/sound/AudioState$PAUSED : app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$PAUSED;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -75,6 +82,7 @@ public final class app/lexilabs/basic/sound/AudioState$PAUSED : app/lexilabs/bas
 }
 
 public final class app/lexilabs/basic/sound/AudioState$PLAYING : app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$PLAYING;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -82,6 +90,7 @@ public final class app/lexilabs/basic/sound/AudioState$PLAYING : app/lexilabs/ba
 }
 
 public final class app/lexilabs/basic/sound/AudioState$READY : app/lexilabs/basic/sound/AudioState {
+	public static final field $stable I
 	public static final field INSTANCE Lapp/lexilabs/basic/sound/AudioState$READY;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -97,7 +106,8 @@ public final class app/lexilabs/basic/sound/MixerChannelKt {
 }
 
 public final class app/lexilabs/basic/sound/SoundBoard : app/lexilabs/basic/sound/SoundBoardBuilder {
-	public fun <init> (Ljava/lang/Object;)V
+	public static final field $stable I
+	public fun <init> ()V
 	public fun getMixer ()Lkotlinx/coroutines/channels/Channel;
 	public fun getSoundBytes ()Ljava/util/List;
 	public fun load (Ljava/lang/String;Ljava/lang/String;)V
@@ -105,8 +115,8 @@ public final class app/lexilabs/basic/sound/SoundBoard : app/lexilabs/basic/soun
 	public fun load (Ljava/util/Map;)V
 	public fun load (Lkotlin/Pair;)V
 	public fun load ([Lapp/lexilabs/basic/sound/SoundByte;)V
-	public fun powerDown ()V
-	public fun powerUp ()V
+	public fun powerDown (Landroidx/compose/runtime/Composer;I)V
+	public fun powerUp (Landroidx/compose/runtime/Composer;I)V
 }
 
 public abstract interface class app/lexilabs/basic/sound/SoundBoardBuilder {
@@ -117,8 +127,8 @@ public abstract interface class app/lexilabs/basic/sound/SoundBoardBuilder {
 	public fun load (Ljava/util/Map;)V
 	public fun load (Lkotlin/Pair;)V
 	public fun load ([Lapp/lexilabs/basic/sound/SoundByte;)V
-	public abstract fun powerDown ()V
-	public abstract fun powerUp ()V
+	public abstract fun powerDown (Landroidx/compose/runtime/Composer;I)V
+	public abstract fun powerUp (Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class app/lexilabs/basic/sound/SoundBoardBuilder$DefaultImpls {
@@ -130,6 +140,7 @@ public final class app/lexilabs/basic/sound/SoundBoardBuilder$DefaultImpls {
 }
 
 public final class app/lexilabs/basic/sound/SoundByte {
+	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getLocalPath ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;

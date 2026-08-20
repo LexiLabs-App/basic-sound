@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.multiplatform.library)
     alias(libs.plugins.kotlinx.binary.compatibility.validator)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
 }
@@ -50,12 +52,6 @@ kotlin {
         iosArm64(), // mobile
         iosSimulatorArm64(), // mobile
         macosArm64(), // desktop
-        tvosArm64(), // tv
-        tvosSimulatorArm64(), // tv
-        watchosArm32(), // watch
-        watchosArm64(), // watch
-        watchosDeviceArm64(), // watch
-        watchosSimulatorArm64(), // watch
     ).forEach {
         it.binaries.framework {
             baseName = "basic-sound"
@@ -68,6 +64,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.lexilabs.basic.logging)
+            compileOnly(libs.compose.foundation)
+            compileOnly(libs.compose.runtime)
+            api(libs.compose.foundation)
+            api(libs.compose.runtime)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
