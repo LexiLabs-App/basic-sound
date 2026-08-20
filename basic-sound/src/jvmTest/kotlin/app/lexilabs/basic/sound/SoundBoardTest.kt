@@ -7,6 +7,9 @@ import javax.sound.sampled.AudioSystem
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 
 class SoundBoardTest {
 
@@ -43,6 +46,21 @@ class SoundBoardTest {
         // We can't easily assert that the sound was played, 
         // but we can check that no exceptions were thrown during playback.
         // We'll add a small delay to allow the sound to be processed.
-        delay(1000)
+        delay(1000.milliseconds)
+    }
+
+    @Test
+    fun `unknown sound name is ignored`() = runBlocking {
+        soundBoard.mixer.send("missing_sound")
+        delay(100.milliseconds)
+
+        assertTrue(soundBoard.mixer.trySend(testSoundName).isSuccess)
+    }
+
+    @Test
+    fun `power down closes mixer`() {
+        soundBoard.powerDown()
+
+        assertFalse(soundBoard.mixer.trySend(testSoundName).isSuccess)
     }
 }

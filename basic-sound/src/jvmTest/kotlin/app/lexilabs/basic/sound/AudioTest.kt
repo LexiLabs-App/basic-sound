@@ -44,6 +44,24 @@ class AudioTest {
     }
 
     @Test
+    fun validWaveSupportsAudioStateTransitions() {
+        val file = createWaveFile(frameCount = 8_000)
+        val audio = Audio(file.absolutePath)
+
+        audio.load()
+        assertEquals(AudioState.READY, audio.audioState.value)
+        audio.play()
+        assertEquals(AudioState.PLAYING, audio.audioState.value)
+        audio.pause()
+        assertEquals(AudioState.PAUSED, audio.audioState.value)
+        audio.play()
+        assertEquals(AudioState.PLAYING, audio.audioState.value)
+        audio.stop()
+        assertEquals(AudioState.READY, audio.audioState.value)
+        audio.release()
+    }
+
+    @Test
     fun audioByteLoadsWaveInput() {
         val file = createWaveFile()
         @Suppress("DEPRECATION")
@@ -56,11 +74,11 @@ class AudioTest {
         audioByte.release()
     }
 
-    private fun createWaveFile(): File {
+    private fun createWaveFile(frameCount: Long = 8): File {
         val file = File.createTempFile("basic-sound", ".wav")
         temporaryFiles += file
         val format = AudioFormat(8_000f, 8, 1, true, false)
-        AudioInputStream(ByteArray(8).inputStream(), format, 8).use { stream ->
+        AudioInputStream(ByteArray(frameCount.toInt()).inputStream(), format, frameCount).use { stream ->
             AudioSystem.write(stream, AudioFileFormat.Type.WAVE, file)
         }
         return file

@@ -103,6 +103,9 @@ kotlin {
         compileSdk = libs.versions.build.sdk.compile.get().toInt()
         minSdk = libs.versions.build.sdk.min.get().toInt()
         withJava()
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
 
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_26)
