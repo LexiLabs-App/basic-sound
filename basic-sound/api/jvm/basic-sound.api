@@ -112,11 +112,11 @@ public final class app/lexilabs/basic/sound/SoundBoard : app/lexilabs/basic/soun
 public abstract interface class app/lexilabs/basic/sound/SoundBoardBuilder {
 	public abstract fun getMixer ()Lkotlinx/coroutines/channels/Channel;
 	public abstract fun getSoundBytes ()Ljava/util/List;
-	public abstract fun load (Ljava/lang/String;Ljava/lang/String;)V
-	public abstract fun load (Ljava/util/List;)V
-	public abstract fun load (Ljava/util/Map;)V
-	public abstract fun load (Lkotlin/Pair;)V
-	public abstract fun load ([Lapp/lexilabs/basic/sound/SoundByte;)V
+	public fun load (Ljava/lang/String;Ljava/lang/String;)V
+	public fun load (Ljava/util/List;)V
+	public fun load (Ljava/util/Map;)V
+	public fun load (Lkotlin/Pair;)V
+	public fun load ([Lapp/lexilabs/basic/sound/SoundByte;)V
 	public abstract fun powerDown ()V
 	public abstract fun powerUp ()V
 }

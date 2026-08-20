@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.multiplatform.library)
     alias(libs.plugins.kotlinx.binary.compatibility.validator)
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
@@ -15,7 +15,7 @@ kotlin {
     // FORCES CHECK OF PUBLIC API DECLARATIONS
     explicitApi()
 
-    js(IR) {
+    js {
         binaries.executable()
         browser {
             commonWebpackConfig {
@@ -47,15 +47,11 @@ kotlin {
     }
 
     listOf(
-        iosX64(), // mobile
         iosArm64(), // mobile
         iosSimulatorArm64(), // mobile
-        macosX64(), // desktop
         macosArm64(), // desktop
-        tvosX64(), // tv
         tvosArm64(), // tv
         tvosSimulatorArm64(), // tv
-        watchosX64(), // watch
         watchosArm32(), // watch
         watchosArm64(), // watch
         watchosDeviceArm64(), // watch
@@ -102,28 +98,14 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
-    // Android JVM target target options
-    androidTarget {
-        publishLibraryVariants("release", "debug")
-        compilations.all{
-            compileTaskProvider.configure{
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
-                }
-            }
+    android {
+        namespace = "app.lexilabs.basic.sound"
+        compileSdk = libs.versions.build.sdk.compile.get().toInt()
+        minSdk = libs.versions.build.sdk.min.get().toInt()
+        withJava()
+
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_26)
         }
-    }
-}
-
-android {
-    namespace = "app.lexilabs.basic.sound"
-    compileSdk = rootProject.libs.versions.build.sdk.compile.get().toInt()
-
-    defaultConfig {
-        minSdk = rootProject.libs.versions.build.sdk.min.get().toInt()
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 }
