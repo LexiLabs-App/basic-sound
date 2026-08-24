@@ -11,7 +11,7 @@ kotlinx-browser = "0.5.0"
 bcv = "0.18.1"
 dokka = "2.2.0"
 kover = "0.9.9"
-lexilabs-basic-logging = "0.3.0"
+lexilabs-basic-logging = "0.3.1"
 mp3-spi = "1.9.5.4"
 maven-publish = "0.37.0"
 
