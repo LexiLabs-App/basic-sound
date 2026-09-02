@@ -4,7 +4,7 @@ sound = "0.2.6"
 build-sdk-min = "24"
 build-sdk-compile = "37"
 kotlin = "2.4.10"
-agp = "9.3.1"
+agp = "9.4.0"
 # DEPENDENCIES
 kotlinx-coroutines = "1.11.0"
 kotlinx-browser = "0.5.0"
