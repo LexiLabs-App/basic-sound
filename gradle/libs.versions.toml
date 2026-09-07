@@ -8,7 +8,7 @@ agp = "9.3.1"
 # DEPENDENCIES
 kotlinx-coroutines = "1.11.0"
 kotlinx-browser = "0.5.0"
-bcv = "0.18.1"
+bcv = "0.18.2"
 dokka = "2.2.0"
 kover = "0.9.9"
 lexilabs-basic-logging = "0.3.0"
