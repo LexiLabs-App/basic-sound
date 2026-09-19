@@ -7,6 +7,7 @@ import javax.sound.sampled.AudioSystem
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
@@ -62,5 +63,24 @@ class SoundBoardTest {
         soundBoard.powerDown()
 
         assertFalse(soundBoard.mixer.trySend(testSoundName).isSuccess)
+    }
+
+    @Test
+    fun `volume can be set and coerced`() {
+        assertEquals(1.0f, soundBoard.volume)
+
+        soundBoard.volume = 0.5f
+        assertEquals(0.5f, soundBoard.volume)
+
+        soundBoard.volume = 1.5f
+        assertEquals(1.0f, soundBoard.volume)
+
+        soundBoard.volume = -0.5f
+        assertEquals(0.0f, soundBoard.volume)
+    }
+
+    @Test
+    fun `stopAll can be called without exception`() {
+        soundBoard.stopAll()
     }
 }

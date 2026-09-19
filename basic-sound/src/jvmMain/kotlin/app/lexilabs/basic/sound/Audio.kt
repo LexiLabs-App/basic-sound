@@ -7,7 +7,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
+import javax.sound.sampled.FloatControl
 import kotlin.io.path.Path
+import kotlin.math.log10
 
 @ExperimentalBasicSound
 public actual class Audio actual constructor(): AudioBuilder {
@@ -23,6 +25,36 @@ public actual class Audio actual constructor(): AudioBuilder {
     public actual var resource: String = ""
     public actual var autoPlay: Boolean = false
 
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            applyVolume()
+        }
+
+    private var _isLooping: Boolean = false
+    public actual override var isLooping: Boolean
+        get() = _isLooping
+        set(value) {
+            _isLooping = value
+            applyLooping()
+        }
+
+    public actual override val duration: Long
+        get() = try {
+            if (clip.isOpen) (clip.microsecondLength / 1000L).coerceAtLeast(0L) else 0L
+        } catch (e: Exception) {
+            0L
+        }
+
+    public actual override val currentPosition: Long
+        get() = try {
+            if (clip.isOpen) (clip.microsecondPosition / 1000L).coerceAtLeast(0L) else 0L
+        } catch (e: Exception) {
+            0L
+        }
+
     public actual constructor(resource: String, autoPlay: Boolean): this() {
         this.resource = resource
         this.autoPlay = autoPlay
@@ -31,6 +63,50 @@ public actual class Audio actual constructor(): AudioBuilder {
     public actual constructor(context: Any?, composeResource: String, autoPlay: Boolean): this() {
         this.resource = composeResource
         this.autoPlay = autoPlay
+    }
+
+    public actual override fun seekTo(positionMs: Long) {
+        try {
+            val micros = positionMs.coerceAtLeast(0L) * 1000L
+            cursor = micros
+            if (clip.isOpen) {
+                clip.microsecondPosition = micros
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "seekTo:failure: $e")
+        }
+    }
+
+    private fun applyVolume() {
+        try {
+            if (clip.isOpen && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                val gainControl = clip.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
+                if (_volume <= 0.0001f) {
+                    gainControl.value = gainControl.minimum
+                } else {
+                    val dB = (20f * log10(_volume)).coerceIn(gainControl.minimum, gainControl.maximum)
+                    gainControl.value = dB
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "applyVolume:failure: $e")
+        }
+    }
+
+    private fun applyLooping() {
+        try {
+            if (clip.isOpen) {
+                if (_isLooping) {
+                    if (clip.isRunning) {
+                        clip.loop(Clip.LOOP_CONTINUOUSLY)
+                    }
+                } else {
+                    clip.loop(0)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(tag, "applyLooping:failure: $e")
+        }
     }
 
     public actual override fun load(context: Any?) {
@@ -47,6 +123,7 @@ public actual class Audio actual constructor(): AudioBuilder {
             clip.open(stream)
             when (clip.isOpen) {
                 true -> {
+                    applyVolume()
                     _audioState.value = AudioState.READY
                     if (autoPlay) {
                         play()
@@ -73,11 +150,19 @@ public actual class Audio actual constructor(): AudioBuilder {
             }
             is AudioState.PAUSED -> {
                 clip.microsecondPosition = cursor
-                clip.start()
+                if (_isLooping) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY)
+                } else {
+                    clip.start()
+                }
                 _audioState.value = AudioState.PLAYING
             }
             is AudioState.READY -> {
-                clip.start()
+                if (_isLooping) {
+                    clip.loop(Clip.LOOP_CONTINUOUSLY)
+                } else {
+                    clip.start()
+                }
                 _audioState.value = AudioState.PLAYING
             }
         }

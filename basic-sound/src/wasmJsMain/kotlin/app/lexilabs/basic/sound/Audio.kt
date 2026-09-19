@@ -18,6 +18,48 @@ public actual class Audio public actual constructor() : AudioBuilder {
 
     private var player: Audio? = null
 
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            try {
+                player?.volume = _volume.toDouble()
+            } catch (e: Exception) {
+                Log.e(tag, "setVolume:failure: $e")
+            }
+        }
+
+    private var _isLooping: Boolean = false
+    public actual override var isLooping: Boolean
+        get() = _isLooping
+        set(value) {
+            _isLooping = value
+            try {
+                player?.loop = value
+            } catch (e: Exception) {
+                Log.e(tag, "setLooping:failure: $e")
+            }
+        }
+
+    public actual override val duration: Long
+        get() = try {
+            player?.duration?.let { d ->
+                if (d.isFinite() && !d.isNaN()) (d * 1000.0).toLong().coerceAtLeast(0L) else 0L
+            } ?: 0L
+        } catch (e: Exception) {
+            0L
+        }
+
+    public actual override val currentPosition: Long
+        get() = try {
+            player?.currentTime?.let { t ->
+                if (t.isFinite() && !t.isNaN()) (t * 1000.0).toLong().coerceAtLeast(0L) else 0L
+            } ?: 0L
+        } catch (e: Exception) {
+            0L
+        }
+
     public actual constructor(resource: String, autoPlay: Boolean) : this() {
         this.resource = resource
         this.autoPlay = autoPlay
@@ -30,10 +72,21 @@ public actual class Audio public actual constructor() : AudioBuilder {
         load()
     }
 
+    public actual override fun seekTo(positionMs: Long) {
+        try {
+            player?.currentTime = positionMs.coerceAtLeast(0L) / 1000.0
+        } catch (e: Exception) {
+            Log.e(tag, "seekTo:failure: $e")
+        }
+    }
+
     actual override fun load(context: Any?) {
         try {
-        _audioState.value = AudioState.LOADING
-            player = Audio(resource)
+            _audioState.value = AudioState.LOADING
+            player = Audio(resource).apply {
+                volume = _volume.toDouble()
+                loop = _isLooping
+            }
             player?.oncanplaythrough?.let { _ ->
                 {
                     _audioState.value = AudioState.READY

@@ -19,6 +19,18 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
     public actual override val soundBytes: MutableList<SoundByte> = mutableListOf<SoundByte>()
     public actual override val mixer: MixerChannel = Channel<String>()
 
+    private val activeStreams: MutableSet<Int> = mutableSetOf()
+
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            activeStreams.forEach { streamId ->
+                soundPool.setVolume(streamId, _volume, _volume)
+            }
+        }
+
     init {
         require(context != null) {
             "context for Soundboard cannot be null in Android"
@@ -55,15 +67,29 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
                 when (val name = result.getOrNull()) {
                     null -> break
                     else -> {
-                        audioIds[name]?.let { soundPool.play(it, 1f, 1f, 1, 0, 1f) }
+                        audioIds[name]?.let { soundId ->
+                            val streamId = soundPool.play(soundId, _volume, _volume, 1, 0, 1f)
+                            if (streamId != 0) {
+                                activeStreams.add(streamId)
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
+    public actual override fun stopAll() {
+        activeStreams.forEach { streamId ->
+            soundPool.stop(streamId)
+        }
+        activeStreams.clear()
+        soundPool.autoPause()
+    }
+
     public actual override fun powerDown() {
         mixer.close()
+        stopAll()
         soundPool.release()
         audioIds.clear()
         soundBytes.clear()

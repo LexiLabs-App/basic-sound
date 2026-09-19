@@ -79,11 +79,25 @@ class CommonApiTest {
         assertTrue(board.poweredDown)
     }
 
+    @Test
+    fun soundBoardVolumeAndStopAllCanBeControlled() {
+        val board = FakeSoundBoard()
+        assertEquals(1.0f, board.volume)
+
+        board.volume = 0.5f
+        assertEquals(0.5f, board.volume)
+
+        board.stopAll()
+        assertTrue(board.stoppedAll)
+    }
+
     private class FakeSoundBoard : SoundBoardBuilder {
         override val soundBytes = mutableListOf<SoundByte>()
         override val mixer: MixerChannel = Channel(Channel.UNLIMITED)
+        override var volume: Float = 1.0f
         var poweredUp = false
         var poweredDown = false
+        var stoppedAll = false
 
         override fun powerUp() {
             poweredUp = true
@@ -92,6 +106,10 @@ class CommonApiTest {
         override fun powerDown() {
             poweredDown = true
             mixer.close()
+        }
+
+        override fun stopAll() {
+            stoppedAll = true
         }
     }
 }

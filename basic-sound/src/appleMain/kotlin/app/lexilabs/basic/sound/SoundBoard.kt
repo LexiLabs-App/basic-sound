@@ -8,12 +8,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import platform.AVFAudio.AVAudioEngine
-import platform.AVFAudio.AVAudioMixerNode
 import platform.AVFAudio.AVAudioFile
+import platform.AVFAudio.AVAudioMixerNode
 import platform.AVFAudio.AVAudioNodeBus
 import platform.AVFAudio.AVAudioPlayerNode
 import platform.Foundation.NSURL
-import kotlin.collections.set
 
 @OptIn(ExperimentalForeignApi::class)
 public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuilder {
@@ -25,6 +24,16 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
 
     public actual override val soundBytes: MutableList<SoundByte> = mutableListOf<SoundByte>()
     public actual override val mixer: MixerChannel = Channel<String>()
+
+    private val activePlayerNodes: MutableList<AVAudioPlayerNode> = mutableListOf()
+
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            mixerNode.outputVolume = _volume
+        }
 
     init {
         engine.startAndReturnError(null)
@@ -53,6 +62,7 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
                             val playerNode = AVAudioPlayerNode()
                             engine.attachNode(playerNode)
                             engine.connect(playerNode, mixerNode, mixerNode.outputFormatForBus(AVAudioNodeBus.MIN_VALUE))
+                            activePlayerNodes.add(playerNode)
                             playerNode.scheduleFile(file = it, atTime = null, null)
                             playerNode.play()
                         }
@@ -62,8 +72,21 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         }
     }
 
+    public actual override fun stopAll() {
+        activePlayerNodes.forEach { playerNode ->
+            try {
+                playerNode.stop()
+                engine.detachNode(playerNode)
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
+        activePlayerNodes.clear()
+    }
+
     public actual override fun powerDown() {
         mixer.close()
+        stopAll()
         audioFiles.clear()
         soundBytes.clear()
         engine.stop()

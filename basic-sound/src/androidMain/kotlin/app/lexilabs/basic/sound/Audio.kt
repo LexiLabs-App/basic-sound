@@ -32,6 +32,44 @@ public actual class Audio actual constructor(): AudioBuilder {
     public actual var resource: String = ""
     public actual var autoPlay: Boolean = false
 
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            try {
+                mediaPlayer?.setVolume(_volume, _volume)
+            } catch (e: Exception) {
+                Log.e(tag, "setVolume:failure: $e")
+            }
+        }
+
+    private var _isLooping: Boolean = false
+    public actual override var isLooping: Boolean
+        get() = _isLooping
+        set(value) {
+            _isLooping = value
+            try {
+                mediaPlayer?.isLooping = value
+            } catch (e: Exception) {
+                Log.e(tag, "setLooping:failure: $e")
+            }
+        }
+
+    public actual override val duration: Long
+        get() = try {
+            mediaPlayer?.duration?.takeIf { it >= 0 }?.toLong() ?: 0L
+        } catch (e: Exception) {
+            0L
+        }
+
+    public actual override val currentPosition: Long
+        get() = try {
+            mediaPlayer?.currentPosition?.takeIf { it >= 0 }?.toLong() ?: 0L
+        } catch (e: Exception) {
+            0L
+        }
+
     public actual constructor(resource: String, autoPlay: Boolean): this() {
         this.resource = resource
         this.autoPlay = autoPlay
@@ -44,6 +82,14 @@ public actual class Audio actual constructor(): AudioBuilder {
         context?.let {
             load(it)
         } ?: throw NullPointerException("Context is required for Composable Resource to be used with `Audio()`")
+    }
+
+    public actual override fun seekTo(positionMs: Long) {
+        try {
+            mediaPlayer?.seekTo(positionMs.coerceAtLeast(0L).toInt())
+        } catch (e: Exception) {
+            Log.e(tag, "seekTo:failure: $e")
+        }
     }
 
     /**
@@ -73,6 +119,9 @@ public actual class Audio actual constructor(): AudioBuilder {
                 } ?: setDataSource(resource)
                 // reset context after
 
+                setVolume(_volume, _volume)
+                isLooping = _isLooping
+
                 prepareAsync()
                 setOnPreparedListener {
                     // Ready to play
@@ -85,7 +134,9 @@ public actual class Audio actual constructor(): AudioBuilder {
                     throw Exception("init: MediaPlayer Error: $resource")
                 }
                 setOnCompletionListener {
-                    _audioState.value = AudioState.READY
+                    if (!isLooping) {
+                        _audioState.value = AudioState.READY
+                    }
                 }
             }
         } catch (e: Exception) {
