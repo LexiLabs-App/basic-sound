@@ -4,6 +4,8 @@ package app.lexilabs.basic.sound
 
 import app.lexilabs.basic.logging.Log
 import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UnsafeNumber
+import kotlinx.cinterop.convert
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +25,7 @@ import platform.Foundation.dataWithContentsOfURL
  * ```
  */
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
 @ExperimentalBasicSound
 public actual class Audio actual constructor(): AudioBuilder {
 
@@ -37,6 +39,36 @@ public actual class Audio actual constructor(): AudioBuilder {
     public actual var resource: String = ""
     public actual var autoPlay: Boolean = false
 
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            player?.volume = _volume
+        }
+
+    private var _isLooping: Boolean = false
+    public actual override var isLooping: Boolean
+        get() = _isLooping
+        set(value) {
+            _isLooping = value
+            player?.numberOfLoops = (if (value) -1 else 0).convert()
+        }
+
+    public actual override val duration: Long
+        get() = try {
+            player?.let { (it.duration * 1000.0).toLong().coerceAtLeast(0L) } ?: 0L
+        } catch (e: Exception) {
+            0L
+        }
+
+    public actual override val currentPosition: Long
+        get() = try {
+            player?.let { (it.currentTime * 1000.0).toLong().coerceAtLeast(0L) } ?: 0L
+        } catch (e: Exception) {
+            0L
+        }
+
     public actual constructor(resource: String, autoPlay: Boolean) : this() {
         this.resource = resource
         this.autoPlay = autoPlay
@@ -47,6 +79,15 @@ public actual class Audio actual constructor(): AudioBuilder {
         this.resource = composeResource
         this.autoPlay = autoPlay
         load()
+    }
+
+    public actual override fun seekTo(positionMs: Long) {
+        try {
+            val seconds = positionMs.coerceAtLeast(0L) / 1000.0
+            player?.currentTime = seconds
+        } catch (e: Exception) {
+            Log.e(tag, "seekTo:failure: $e")
+        }
     }
 
     public actual override fun load(context: Any?) {
@@ -62,7 +103,10 @@ public actual class Audio actual constructor(): AudioBuilder {
                 data = NSData.dataWithContentsOfFile(resource)
                     ?: throw IllegalStateException("load:The path provided was invalid")
             }
-            player = AVAudioPlayer(data, error = null)
+            player = AVAudioPlayer(data, error = null).apply {
+                volume = _volume
+                numberOfLoops = (if (_isLooping) -1 else 0).convert()
+            }
             _audioState.value = AudioState.READY
             if (autoPlay) {
                 play()

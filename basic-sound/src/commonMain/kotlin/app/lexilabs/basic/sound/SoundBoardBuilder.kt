@@ -17,6 +17,11 @@ public interface SoundBoardBuilder {
     public val mixer: MixerChannel
 
     /**
+     * Master volume for all sounds played through this [SoundBoard], from `0.0f` (silent) to `1.0f` (full volume).
+     */
+    public var volume: Float
+
+    /**
      * Used to load the [soundBytes] into memory and begin the listener for the [mixer] channel
      */
     public fun powerUp()
@@ -26,6 +31,11 @@ public interface SoundBoardBuilder {
      * and other platform-specific resources
      */
     public fun powerDown()
+
+    /**
+     * Used to stop all currently active sounds playing on this [SoundBoard].
+     */
+    public fun stopAll()
 
     /**
      * Used to load a [SoundByte] onto a [SoundBoard]

@@ -10,6 +10,7 @@ import javax.sound.sampled.AudioSystem
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
@@ -58,6 +59,32 @@ class AudioTest {
         assertEquals(AudioState.PLAYING, audio.audioState.value)
         audio.stop()
         assertEquals(AudioState.READY, audio.audioState.value)
+        audio.release()
+    }
+
+    @Test
+    fun audioVolumeAndLoopingAndSeekingWorkAsExpected() {
+        val file = createWaveFile(frameCount = 8_000)
+        val audio = Audio(file.absolutePath)
+
+        assertEquals(1.0f, audio.volume)
+        assertFalse(audio.isLooping)
+        assertEquals(0L, audio.duration)
+        assertEquals(0L, audio.currentPosition)
+
+        audio.volume = 0.5f
+        assertEquals(0.5f, audio.volume)
+
+        audio.isLooping = true
+        assertTrue(audio.isLooping)
+
+        audio.load()
+        assertEquals(AudioState.READY, audio.audioState.value)
+        assertTrue(audio.duration > 0L)
+
+        audio.seekTo(100L)
+        assertEquals(100L, audio.currentPosition)
+
         audio.release()
     }
 

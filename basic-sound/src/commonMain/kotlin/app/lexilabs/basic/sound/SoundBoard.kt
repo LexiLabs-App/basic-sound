@@ -35,6 +35,9 @@ public expect class SoundBoard(context: Any?): SoundBoardBuilder {
     /** the [Channel] used to pass [MixerChannel.play] commands */
     override val mixer: MixerChannel
 
+    /** Master volume for all sounds played through this [SoundBoard], from `0.0f` to `1.0f` */
+    override var volume: Float
+
     /**
      * Used to load the [soundBytes] into memory and begin the listener for the [mixer] channel
      */
@@ -45,4 +48,9 @@ public expect class SoundBoard(context: Any?): SoundBoardBuilder {
      * and other platform-specific resources
      */
     override fun powerDown()
+
+    /**
+     * Used to stop all currently active sounds playing on this [SoundBoard].
+     */
+    override fun stopAll()
 }

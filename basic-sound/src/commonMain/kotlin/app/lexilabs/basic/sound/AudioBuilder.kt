@@ -1,11 +1,5 @@
 package app.lexilabs.basic.sound
 
-import app.lexilabs.basic.sound.AudioState.ERROR
-import app.lexilabs.basic.sound.AudioState.LOADING
-import app.lexilabs.basic.sound.AudioState.NONE
-import app.lexilabs.basic.sound.AudioState.PAUSED
-import app.lexilabs.basic.sound.AudioState.PLAYING
-import app.lexilabs.basic.sound.AudioState.READY
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -99,4 +93,46 @@ public interface AudioBuilder {
      * ```
      */
     public fun release()
+
+    /**
+     * Playback volume of the [Audio] from `0.0f` (silence) to `1.0f` (full volume).
+     *
+     * Example:
+     * ```
+     * audio.volume = 0.5f // Set to 50% volume
+     * ```
+     */
+    public var volume: Float
+
+    /**
+     * If true, [Audio] loops continuously until stopped or paused.
+     *
+     * Example:
+     * ```
+     * audio.isLooping = true // loops indefinitely
+     * ```
+     */
+    public var isLooping: Boolean
+
+    /**
+     * Total duration of the audio in milliseconds, or `0L` if unknown or not loaded.
+     */
+    public val duration: Long
+
+    /**
+     * Current playback position of the audio in milliseconds, or `0L` if not loaded.
+     */
+    public val currentPosition: Long
+
+    /**
+     * Seeks playback to the specified position in milliseconds.
+     *
+     * @param positionMs target position in milliseconds
+     *
+     * Example:
+     * ```
+     * audio.seekTo(5000L) // seek to 5 seconds
+     * ```
+     */
+    public fun seekTo(positionMs: Long)
 }

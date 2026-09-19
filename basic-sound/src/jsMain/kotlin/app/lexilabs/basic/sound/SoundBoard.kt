@@ -15,6 +15,22 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
     public actual override val soundBytes: MutableList<SoundByte> = mutableListOf<SoundByte>()
     public actual override val mixer: MixerChannel = Channel<String>()
 
+    private val activeAudios: MutableList<Audio> = mutableListOf<Audio>()
+
+    private var _volume: Float = 1.0f
+    public actual override var volume: Float
+        get() = _volume
+        set(value) {
+            _volume = value.coerceIn(0.0f, 1.0f)
+            activeAudios.forEach { audio ->
+                try {
+                    audio.volume = _volume.toDouble()
+                } catch (e: Exception) {
+                    // ignore
+                }
+            }
+        }
+
     public actual override fun powerUp() {
         Log.i(tag, "launch:starting to load sounds")
         soundBytes.forEachIndexed { index, soundByte ->
@@ -35,11 +51,13 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
                     else -> {
                         audioPaths[name]?.let {
                             val audio = Audio(it)
-                            audio.play()
-                            when (audio.paused) {
-                                true -> releaseAudio(audio)
-                                false -> { /* DO NOTHING */}
+                            audio.volume = _volume.toDouble()
+                            activeAudios.add(audio)
+                            audio.onended = {
+                                activeAudios.remove(audio)
+                                releaseAudio(audio)
                             }
+                            audio.play()
                         }
                     }
                 }
@@ -55,8 +73,16 @@ public actual class SoundBoard actual constructor(context: Any?): SoundBoardBuil
         audio.srcObject = null
     }
 
+    public actual override fun stopAll() {
+        activeAudios.forEach { audio ->
+            releaseAudio(audio)
+        }
+        activeAudios.clear()
+    }
+
     public actual override fun powerDown() {
         mixer.close()
+        stopAll()
         audioPaths.clear()
         soundBytes.clear()
     }
